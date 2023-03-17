@@ -10,7 +10,15 @@ const getAllBooks = async(req, res) =>{
 }
 
 const getBook=  async(req, res) =>{
-    res.send('get book')
+    const {user:{userId}, params:{id:bookId}}= req
+
+    const book = await Book.findOne({
+        _id:bookId, createdBy: userId
+    })
+    if(!book){
+        throw new NotFoundError(`No book found with that ${userId}`)
+    }
+    res.status(StatusCodes.OK).json({ book })
 }
 
 const createBook=  async(req, res) =>{
@@ -20,11 +28,36 @@ const createBook=  async(req, res) =>{
 }
 
 const updateBookList=  async(req, res) =>{
-    res.send('update book list')
+    const {
+        body:{title, genre},
+        user:{userId}, 
+        params:{id:bookId},
+    }= req
+    if(title === ''||  genre === ''){
+        throw new BadRequestError('Title or Genre fields cannot be empty')
+    }
+    const book = await Book.findByIdAndUpdate({_id:bookId, createdBy:userId}, req.body, 
+        {new:true, runValidators:true})
+        if(!book){
+            throw new NotFoundError(`No book found with that ${userId}`)
+        }
+        res.status(StatusCodes.OK).json({ book })    
 }
 
 const deleteBook=  async(req, res) =>{
-    res.send('delete book')
+    const {
+        user:{userId}, 
+        params:{id:bookId},
+    }= req
+
+    const book = await Book.findByIdAndRemove({
+        _id:bookId,
+        createdBy: userId
+    })
+    if(!book){
+        throw new NotFoundError(`No book found with that id: ${userId}`)
+    }
+    res.status(StatusCodes.OK).send()
 }
 
 
