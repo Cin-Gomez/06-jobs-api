@@ -1,5 +1,5 @@
 //CRUD Functionality
-const Book = require('../models/book')
+const Book = require('../models/Book')
 const {StatusCodes}= require('http-status-codes')
 const {BadRequestError, NotFoundError} = require('../errors')
 
@@ -16,7 +16,7 @@ const getBook=  async(req, res) =>{
         _id:bookId, createdBy: userId
     })
     if(!book){
-        throw new NotFoundError(`No book found with that ${userId}`)
+        throw new NotFoundError(`No book found with id ${bookId}`)
     }
     res.status(StatusCodes.OK).json({ book })
 }
@@ -36,10 +36,11 @@ const updateBookList=  async(req, res) =>{
     if(title === ''||  genre === ''){
         throw new BadRequestError('Title or Genre fields cannot be empty')
     }
-    const book = await Book.findByIdAndUpdate({_id:bookId, createdBy:userId}, req.body, 
+    const book = await Book.findByIdAndUpdate({_id:bookId, createdBy:userId}, 
+        req.body, 
         {new:true, runValidators:true})
         if(!book){
-            throw new NotFoundError(`No book found with that ${userId}`)
+            throw new NotFoundError(`No book found with that ${bookId}`)
         }
         res.status(StatusCodes.OK).json({ book })    
 }
@@ -55,7 +56,7 @@ const deleteBook=  async(req, res) =>{
         createdBy: userId
     })
     if(!book){
-        throw new NotFoundError(`No book found with that id: ${userId}`)
+        throw new NotFoundError(`No book found with that id: ${bookId}`)
     }
     res.status(StatusCodes.OK).send()
 }

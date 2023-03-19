@@ -1,4 +1,4 @@
-const { CustomAPIError } = require('../errors')
+// const { CustomAPIError } = require('../errors')
 const { StatusCodes } = require('http-status-codes')
 const errorHandlerMiddleware = (err, req, res, next) => {
 
@@ -14,7 +14,7 @@ let customError = {
   // }
 
 if(err.name === 'ValidationError'){
-  console.log(Object.values(err.errors))
+  // console.log(Object.values(err.errors))
   customError.msg = Object.values(err.errors)
   .map((item)=> item.message)
   .join(',')

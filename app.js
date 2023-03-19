@@ -22,21 +22,25 @@ const booksRouter = require('./routes/books')
 // error handler
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
-const RateLimit = require('express-rate-limit');
+// const RateLimit = require('express-rate-limit');
 
 app.set('trust proxy', 1)
 app.use(rateLimiter({
   windowMS: 15 * 60 * 1000, //15 minutes
   max: 100, //limit each IP to 100 requests per windowMS
 }))
-app.use(express.json());
+app.use(express.json())
 app.use(helmet())
 app.use(cors())
 app.use(xss())
 
+app.get('/', (req, res) => {
+  res.send('<h1>Jobs API</h1><a href="/api-docs">Documentation</a>');
+});
+
 // routes
 app.use('/api/v1/auth', authRouter)
-app.use('/api/v1/books/', authenticateUser,booksRouter)
+app.use('/api/v1/books', authenticateUser,booksRouter)
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
