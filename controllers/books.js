@@ -1,5 +1,5 @@
 //CRUD Functionality
-const Book = require('../models/Book')
+const Book = require('../models/book')
 const {StatusCodes}= require('http-status-codes')
 const {BadRequestError, NotFoundError} = require('../errors')
 
