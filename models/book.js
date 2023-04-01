@@ -16,7 +16,7 @@ const BookSchema = new mongoose.Schema({
     },
     status:{
         type:String,
-        enum:['read', 'pending'],
+        enum:['finished', 'pending', 'no longer interested'],
         default: 'pending',
     },
     createdBy:{

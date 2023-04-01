@@ -10,11 +10,15 @@ const getAllBooks = async(req, res) =>{
 }
 
 const getBook=  async(req, res) =>{
-    const {user:{userId}, params:{id:bookId}}= req
-
+    const {
+        user:{userId}, 
+        params:{id:bookId},
+    }= req
+console.log(req.params)
     const book = await Book.findOne({
         _id:bookId, createdBy: userId
     })
+    
     if(!book){
         throw new NotFoundError(`No book found with id ${bookId}`)
     }
@@ -50,15 +54,16 @@ const deleteBook=  async(req, res) =>{
         user:{userId}, 
         params:{id:bookId},
     }= req
-
+console.log(req.params)
     const book = await Book.findByIdAndRemove({
         _id:bookId,
         createdBy: userId
     })
-    if(!book){
-        throw new NotFoundError(`No book found with that id: ${bookId}`)
-    }
-    res.status(StatusCodes.OK).send()
+console.log(bookId)
+if(!book){
+    throw new NotFoundError(`No book found with id ${bookId}`)
+}
+    res.status(StatusCodes.OK).json({msg: "The entry was deleted"})
 }
 
 
