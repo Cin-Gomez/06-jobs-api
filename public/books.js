@@ -40,7 +40,6 @@ async function buildBooksTable(booksTable, booksTableHeader, token, message) {
   }
 }
 
-
 document.addEventListener("DOMContentLoaded", () => {
     const logoff = document.getElementById("logoff");
     const message = document.getElementById("message");
@@ -209,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
         suspendInput = false;
       }
     } // section 4
-    //add delete functionality here
+  
     else if (e.target === addBook) {
         showing.style.display = "none";
         editBook.style.display = "block";
@@ -329,6 +328,29 @@ document.addEventListener("DOMContentLoaded", () => {
           } else {
             // might happen if the list has been updated since last display
             message.textContent = "The books entry was not found";
+            thisEvent = new Event("startDisplay");
+            document.dispatchEvent(thisEvent);
+          }
+        } catch (err) {
+          message.textContent = "A communications error has occurred.";
+        }
+        suspendInput = false;
+      }
+
+      //delete functionality
+      else if (e.target.classList.contains("deleteButton")) {
+        suspendInput = true;
+        try {
+          const response = await fetch(`/api/v1/books/${e.target.dataset.id}`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const data = await response.json();
+          if (response.status === 200) {
+            message.textContent = "The books entry was deleted";
             thisEvent = new Event("startDisplay");
             document.dispatchEvent(thisEvent);
           }
